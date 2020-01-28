@@ -4,8 +4,8 @@
   "description": "Chat bot for CMPT 733",
   "main": "index.js",
   "engines": {
-    "node": "12.10.0",
-    "npm": "6.9.0"
+    "node": "13.6.0",
+    "npm": "6.13.4"
   },
   "scripts": {
     "start": "node index.js",
