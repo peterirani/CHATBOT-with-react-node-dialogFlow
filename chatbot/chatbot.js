@@ -5,7 +5,7 @@ const structjsnon = require("structjson");
 
 const projectID = config.googleProjectID;
 const credentials = {
-    client_email : config.googleClient,
+    client_email : config.googleClientEmail,
     private_key: config.googlePrivateKey
 };
 
