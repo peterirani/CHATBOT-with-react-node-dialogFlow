@@ -3,17 +3,23 @@
   "version": "1.0.0",
   "description": "Chat bot for CMPT 733",
   "main": "index.js",
-  "engines" : {
-    "node" : "12.10.0",
-    "npm" : "6.9.0"
-  } ,
+  "engines": {
+    "node": "12.10.0",
+    "npm": "6.9.0"
+  },
   "scripts": {
-    "start" : "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "backend": "nodemon index.js"
   },
   "author": "Peshotan Irani",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "dialogflow": "^1.1.1",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
