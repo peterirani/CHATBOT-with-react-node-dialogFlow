@@ -20,6 +20,7 @@
     "body-parser": "^1.19.0",
     "dialogflow": "^1.1.1",
     "express": "^4.17.1",
+    "react-router-dom": "^5.1.2",
     "structjson": "^1.0.1"
   },
   "devDependencies": {
