@@ -11,8 +11,8 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "backend": "nodemon index.js",
-    "frontend" : "npm run start --prefix client",
-    "dev" : "concurrently \"npm run backend\"  \"npm run frontend\" "
+    "frontend": "npm run start --prefix client",
+    "dev": "concurrently \"npm run backend\"  \"npm run frontend\" "
   },
   "author": "Peshotan Irani",
   "license": "ISC",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+    "http-proxy-middleware": "^0.20.0",
     "nodemon": "^2.0.2"
   }
 }
