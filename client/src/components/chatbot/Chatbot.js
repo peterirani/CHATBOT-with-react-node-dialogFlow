@@ -26,8 +26,8 @@ class Chatbot extends Component {
     }
 
     componentDidMount() {
-        this.df_event_query('welcome').then(r => console.log(r));
-        console.log(cookies.get("userID"));
+        this.df_event_query('welcome').then(r => null);
+        //console.log(cookies.get("userID"));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -48,6 +48,7 @@ class Chatbot extends Component {
         // we are pulling the value of `text` from the returned JSON
         const res = await axios.post('/api/df_text_query', {text : queryText,  userID: cookies.get("userID")});
         for (let msg of res.data.fulfillmentMessages) {
+            console.log(JSON.stringify(msg));
             let says = {
                 speaks : "R-bot",
                 msg : msg
@@ -75,9 +76,11 @@ class Chatbot extends Component {
     renderMessages(stateMessages) {
         if (stateMessages){
             return stateMessages.map((message,i) => {
-                console.log(message);
-                console.log(this.state.messages);
-                return <Message speaks={message.speaks} text={message.msg.text.text} key={i}/>
+                if(message.msg && message.msg.text && message.msg.text.text){
+                    return <Message speaks={message.speaks} text={message.msg.text.text} key={i}/>
+                } else {
+                    return <h1>CARDS</h1>
+                }
             })
         } else {
             return null;
