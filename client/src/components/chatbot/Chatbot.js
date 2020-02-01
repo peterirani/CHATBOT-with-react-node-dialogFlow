@@ -19,8 +19,8 @@ class Chatbot extends Component {
         };
         //binding methods
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
-        this.renderMessages = this.renderMessages.bind(this);
-        this.renderSingleMessage = this.renderSingleMessage(this);
+        // this.renderMessages = this.renderMessages.bind(this);
+        // this.renderSingleMessage = this.renderSingleMessage(this);
 
         //setting up cookies
         if (cookies.get("userID") === undefined) {
@@ -83,6 +83,7 @@ class Chatbot extends Component {
     }
 
     renderSingleMessage(message, i) {
+        console.log(message);
         if(message.msg && message.msg.text && message.msg.text.text){
             return <Message speaks={message.speaks} text={message.msg.text.text} key={i}/>
         } else if (message.msg && message.msg.payload && message.msg.payload.fields && message.msg.payload.fields.cards) {
@@ -95,7 +96,7 @@ class Chatbot extends Component {
 
                         <div style={{overflow:"auto", overflowY:"scroll"}}>
                             <div style={{height:300, width:message.msg.payload.fields.cards.listValue.values.length * 270}}>
-                                {this.renderCards(this.msg.payload.fields.cards.listValue.values)}
+                                {this.renderCards(message.msg.payload.fields.cards.listValue.values)}
                             </div>
                         </div>
                     </div>
