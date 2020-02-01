@@ -1,7 +1,11 @@
 import React, {Component} from "react";
 import axios from "axios/index";
+import {v4 as uuid} from 'uuid';
+import Cookies from "universal-cookie";
 
 import Message from "./Message";
+
+const cookies = new Cookies();
 
 class Chatbot extends Component {
     messagesEnd;
@@ -14,10 +18,16 @@ class Chatbot extends Component {
         };
         //binding methods
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
+
+        //setting up cookies
+        if (cookies.get("userID") === undefined) {
+            cookies.set('userID', uuid(), {path : "/"})
+        }
     }
 
     componentDidMount() {
         this.df_event_query('welcome').then(r => console.log(r));
+        console.log(cookies.get("userID"));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -25,18 +35,18 @@ class Chatbot extends Component {
         this.inputAutoFocus.focus();
     }
 
-    async df_text_query(text){
+    async df_text_query(queryText){
         let says = {
             speaks : "me",
             msg : {
                 text : {
-                    text : text
+                    text : queryText
                 }
             }
         };
         this.setState({messages: [...this.state.messages, says]});
         // we are pulling the value of `text` from the returned JSON
-        const res = await axios.post('/api/df_text_query', {text});
+        const res = await axios.post('/api/df_text_query', {text : queryText,  userID: cookies.get("userID")});
         for (let msg of res.data.fulfillmentMessages) {
             let says = {
                 speaks : "R-bot",
@@ -49,7 +59,7 @@ class Chatbot extends Component {
 
     async df_event_query(event){
         console.log("EVENT QUERY IS TRIGGERED!!");
-        const res = await axios.post("/api/df_event_query", {event});
+        const res = await axios.post("/api/df_event_query", {event, userID: cookies.get("userID")});
         console.log(event);
         console.log(res);
         for (let msg of res.data.fulfillmentMessages) {

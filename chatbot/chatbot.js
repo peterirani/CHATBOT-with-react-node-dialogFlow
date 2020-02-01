@@ -10,10 +10,11 @@ const credentials = {
 };
 
 const sessionClient = new dialogFlow.SessionsClient({projectID: projectID, credentials : credentials});
-const sessionPath = sessionClient.sessionPath(config.googleProjectID, config.dialogFlowSessionID);
 
 module.exports = {
-    textQuery : async function(text, parameters = {}){
+    textQuery : async function(text, userID ,parameters = {}){
+        //create a unique dialogFlow sessions id for each client by appending the UUID v4 (a pure number) as a string.
+        let sessionPath = sessionClient.sessionPath(config.googleProjectID, config.dialogFlowSessionID + userID);
         let self = module.exports;
         const request = {
             session: sessionPath,
@@ -40,8 +41,10 @@ module.exports = {
         return responses;
     },
 
-    eventQuery : async function(event, parameters = {}){
+    eventQuery : async function(event, userID, parameters = {}){
+        // self is used to import the functions exported by this module
         let self = module.exports;
+        let sessionPath = sessionClient.sessionPath(config.googleProjectID, config.dialogFlowSessionID + userID);
         const request = {
             session: sessionPath,
             queryInput: {
