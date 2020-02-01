@@ -4,6 +4,7 @@ import {v4 as uuid} from 'uuid';
 import Cookies from "universal-cookie";
 
 import Message from "./Message";
+import Card from "./Card";
 
 const cookies = new Cookies();
 
@@ -18,6 +19,8 @@ class Chatbot extends Component {
         };
         //binding methods
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
+        this.renderMessages = this.renderMessages.bind(this);
+        this.renderSingleMessage = this.renderSingleMessage(this);
 
         //setting up cookies
         if (cookies.get("userID") === undefined) {
@@ -73,15 +76,39 @@ class Chatbot extends Component {
         }
     }
 
+    renderCards(cards){
+        return cards.map((card,i) => {
+            return <Card key={i} payload={card.structValue} />
+        })
+    }
+
+    renderSingleMessage(message, i) {
+        if(message.msg && message.msg.text && message.msg.text.text){
+            return <Message speaks={message.speaks} text={message.msg.text.text} key={i}/>
+        } else if (message.msg && message.msg.payload && message.msg.payload.fields && message.msg.payload.fields.cards) {
+            return (<div key={i}>
+                <div className="card-panel grey lighten-5 z-depth-1">
+                    <div style={{overflow:"hidden"}}>
+                        <div className="col s2">
+                            <button className="btn-floating btn-large waves-effect waves-light teal accent-4">{message.speaks}</button>
+                        </div>
+
+                        <div style={{overflow:"auto", overflowY:"scroll"}}>
+                            <div style={{height:300, width:message.msg.payload.fields.cards.listValue.values.length * 270}}>
+                                {this.renderCards(this.msg.payload.fields.cards.listValue.values)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)
+        } else  {
+            return <h1>CARDS</h1>
+        }
+    }
+
     renderMessages(stateMessages) {
         if (stateMessages){
-            return stateMessages.map((message,i) => {
-                if(message.msg && message.msg.text && message.msg.text.text){
-                    return <Message speaks={message.speaks} text={message.msg.text.text} key={i}/>
-                } else {
-                    return <h1>CARDS</h1>
-                }
-            })
+            return stateMessages.map((message,i) => this.renderSingleMessage(message,i))
         } else {
             return null;
         }
