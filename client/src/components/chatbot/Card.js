@@ -10,7 +10,7 @@ const Card = (props) => {
                 </div>
                 <div className="card-content">
                     <p>{props.payload.fields.description.stringValue}</p>
-                    <p><a href="/">{props.payload.fields.price.stringValue}</a></p>
+                    <p><a href={props.payload.fields.link.stringValue}>{props.payload.fields.price.stringValue}</a></p>
                 </div>
                 <div className="card-action">
                     <a href={props.payload.fields.link.stringValue}>Get Now!</a>

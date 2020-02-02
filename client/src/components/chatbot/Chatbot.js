@@ -19,8 +19,9 @@ class Chatbot extends Component {
         };
         //binding methods
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
-        // this.renderMessages = this.renderMessages.bind(this);
-        // this.renderSingleMessage = this.renderSingleMessage(this);
+        this.renderMessages = this.renderMessages.bind(this);
+        this.renderSingleMessage = this.renderSingleMessage(this);
+        this.df_text_query = this.df_text_query.bind(this);
 
         //setting up cookies
         if (cookies.get("userID") === undefined) {
@@ -51,7 +52,6 @@ class Chatbot extends Component {
         // we are pulling the value of `text` from the returned JSON
         const res = await axios.post('/api/df_text_query', {text : queryText,  userID: cookies.get("userID")});
         for (let msg of res.data.fulfillmentMessages) {
-            console.log(JSON.stringify(msg));
             let says = {
                 speaks : "R-bot",
                 msg : msg
@@ -62,12 +62,9 @@ class Chatbot extends Component {
 
 
     async df_event_query(event){
-        console.log("EVENT QUERY IS TRIGGERED!!");
         const res = await axios.post("/api/df_event_query", {event, userID: cookies.get("userID")});
-        console.log(event);
-        console.log(res);
+
         for (let msg of res.data.fulfillmentMessages) {
-            console.log(msg);
             let says = {
                 speaks : "R-bot",
                 msg : msg
@@ -126,12 +123,23 @@ class Chatbot extends Component {
         }
     }
 
+    _handleQuickReplyPayload(event, payload, text){
+        event.preventDefault();
+        event.stopPropagation();
+        this.df_text_query(text);
+    }
 
     render() {
         return(
-            <div style={{height:400, width:400,float:"right"}}>
-                <div id={"chatbot"} style={{height:"100%", width:"100%", overflow:"auto"}}>
-                    <h2>Chatbot</h2>
+            <div style={{height:500, width:400, position:"absolute", bottom:0, right:30, border:"1px solid lightgrey"}}>
+                <nav>
+                    <div className="nav-wrapper teal" style={{paddingLeft:12}} >
+                        <a className="brand-logo" style={{margin:"auto"}}>3-Eyed-BOT</a>
+                    </div>
+                </nav>
+
+                <div id={"chatbot"} style={{height:388, width:"100%", overflow:"auto"}}>
+
                     {this.renderMessages(this.state.messages)}
                     <div
                         //reference tag for smooth scrolling
@@ -139,7 +147,12 @@ class Chatbot extends Component {
                         style={{float:"left", clear:"both"}}
                     >
                     </div>
+                </div>
+
+                <div className="col s12">
                     <input
+                        placeholder="Type your message here"
+                        style={{margin:0, paddingLeft:"1%", paddingRight: "1%", width:"98%"}}
                         type="text"
                         onKeyPress={this._handleInputKeyPress}
                         ref={(el) => this.inputAutoFocus = el}
