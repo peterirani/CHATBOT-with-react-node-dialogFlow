@@ -54,27 +54,47 @@ class Chatbot extends Component {
         };
         this.setState({messages: [...this.state.messages, says]});
         // we are pulling the value of `text` from the returned JSON
-        const res = await axios.post('/api/df_text_query', {text : queryText,  userID: cookies.get("userID")});
-        for (let msg of res.data.fulfillmentMessages) {
-            let says = {
-                speaks : "R-bot",
-                msg : msg
+
+        try{
+            const res = await axios.post('/api/df_text_query', {text : queryText,  userID: cookies.get("userID")});
+            for (let msg of res.data.fulfillmentMessages) {
+                says = {
+                    speaks : "R-bot",
+                    msg : msg
                 };
-            this.setState({messages: [...this.state.messages, says]})
+                this.setState({messages: [...this.state.messages, says]})
+            }
+        } catch (e) {
+                says = {
+                    speaks : "R-bot",
+                    msg : "We are experiencing some technical issues with the bot, please try again!"
+                };
+                this.setState({messages: [...this.state.messages, says]})
         }
+
     }
 
 
     async df_event_query(event){
-        const res = await axios.post("/api/df_event_query", {event, userID: cookies.get("userID")});
 
-        for (let msg of res.data.fulfillmentMessages) {
+        try{
+            const res = await axios.post("/api/df_event_query", {event, userID: cookies.get("userID")});
+
+            for (let msg of res.data.fulfillmentMessages) {
+                let says = {
+                    speaks : "R-bot",
+                    msg : msg
+                };
+                this.setState({messages: [...this.state.messages, says]})
+            }
+        }catch (e){
             let says = {
                 speaks : "R-bot",
-                msg : msg
+                msg : "We are experiencing some technical issues with the bot, please try again!"
             };
             this.setState({messages: [...this.state.messages, says]})
         }
+
     }
 
     renderCards(cards){
@@ -169,7 +189,7 @@ class Chatbot extends Component {
     render() {
         if(this.state.showBot){
             return(
-                <div style={{height:500, width:400, position:"absolute", bottom:0, right:30, border:"1px solid lightgrey"}}>
+                <div style={{height:500, width:500, position:"absolute", bottom:0, right:30, border:"1px solid lightgrey"}}>
                     <nav>
                         <div className="nav-wrapper teal" style={{paddingLeft:12}} >
                             <a className="brand-logo" style={{margin:"auto"}}>3-Eyed-BOT</a>
