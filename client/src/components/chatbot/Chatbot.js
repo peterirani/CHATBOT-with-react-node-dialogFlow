@@ -17,6 +17,7 @@ class Chatbot extends Component {
 
         this.state = {
             messages : [],
+            showBot:true
         };
         //binding methods
         this._handleInputKeyPress = this._handleInputKeyPress.bind(this);
@@ -37,7 +38,9 @@ class Chatbot extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.messagesEnd.scrollIntoView({behavior : "smooth"});
-        this.inputAutoFocus.focus();
+        if(this.inputAutoFocus){
+            this.inputAutoFocus.focus();
+        }
     }
 
     async df_text_query(queryText){
@@ -153,37 +156,72 @@ class Chatbot extends Component {
         }
     };
 
+    show = (e) => {
+        e.preventDefault();
+        this.setState({showBot:true})
+    };
+
+    hide = (e) => {
+        e.preventDefault();
+        this.setState({showBot: false})
+    };
+
     render() {
-        return(
-            <div style={{height:500, width:400, position:"absolute", bottom:0, right:30, border:"1px solid lightgrey"}}>
-                <nav>
-                    <div className="nav-wrapper teal" style={{paddingLeft:12}} >
-                        <a className="brand-logo" style={{margin:"auto"}}>3-Eyed-BOT</a>
+        if(this.state.showBot){
+            return(
+                <div style={{height:500, width:400, position:"absolute", bottom:0, right:30, border:"1px solid lightgrey"}}>
+                    <nav>
+                        <div className="nav-wrapper teal" style={{paddingLeft:12}} >
+                            <a className="brand-logo" style={{margin:"auto"}}>3-Eyed-BOT</a>
+                            <ul id="nav-mobile" className="right hide-on-med-and-down">
+                                <li><a href="/" onClick={this.hide}>Close</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+
+                    <div id={"chatbot"} style={{height:388, width:"100%", overflow:"auto"}}>
+
+                        {this.renderMessages(this.state.messages)}
+                        <div
+                            //reference tag for smooth scrolling
+                            ref={(el) => this.messagesEnd = el}
+                            style={{float:"left", clear:"both"}}
+                        >
+                        </div>
                     </div>
-                </nav>
 
-                <div id={"chatbot"} style={{height:388, width:"100%", overflow:"auto"}}>
-
-                    {this.renderMessages(this.state.messages)}
+                    <div className="col s12">
+                        <input
+                            placeholder="Type your message here"
+                            style={{margin:0, paddingLeft:"1%", paddingRight: "1%", width:"98%"}}
+                            type="text"
+                            onKeyPress={this._handleInputKeyPress}
+                            ref={(el) => this.inputAutoFocus = el}
+                        />
+                    </div>
+                </div>
+            )
+        } else {
+            return(
+                <div style={{height:40, width:400, position:"absolute", bottom:0, right:30, border:"1px solid lightgrey"}}>
+                    <nav>
+                        <div className="nav-wrapper teal" style={{paddingLeft:12}} >
+                            <a className="brand-logo" style={{margin:"auto"}}>3-Eyed-BOT</a>
+                            <ul id="nav-mobile" className="right hide-on-med-and-down">
+                                <li><a href="/" onClick={this.show}>Show</a></li>
+                            </ul>
+                        </div>
+                    </nav>
                     <div
-                        //reference tag for smooth scrolling
-                        ref={(el) => this.messagesEnd = el}
+                        ref={(el) => {this.messagesEnd = el}}
                         style={{float:"left", clear:"both"}}
                     >
+
                     </div>
                 </div>
+            )
+        }
 
-                <div className="col s12">
-                    <input
-                        placeholder="Type your message here"
-                        style={{margin:0, paddingLeft:"1%", paddingRight: "1%", width:"98%"}}
-                        type="text"
-                        onKeyPress={this._handleInputKeyPress}
-                        ref={(el) => this.inputAutoFocus = el}
-                    />
-                </div>
-            </div>
-        )
     }
 }
 
