@@ -142,7 +142,15 @@ class Chatbot extends Component {
     _handleQuickReplyPayload = (event, payload, text) => {
         event.preventDefault();
         event.stopPropagation();
-        this.df_text_query(text);
+
+
+        switch(payload){
+            case "training_masterclass":
+                this.df_event_query("MASTERCLASS");
+            default:
+                this.df_text_query(text);
+                break;
+        }
     };
 
     render() {
